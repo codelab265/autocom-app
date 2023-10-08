@@ -10,7 +10,7 @@
     "splash": {
       "image": "./src/assets/splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#1b7979"
     },
     "assetBundlePatterns": ["**/*"],
     "ios": {
@@ -24,7 +24,7 @@
       "package": "com.autocom.codelab",
       "config": {
         "googleMaps": {
-          "apiKey": "AIzaSyCG9E5E7_YCna0L7GCr8BJgGjLlxkkJE-8"
+          "apiKey": "AIzaSyDoJl8RZOC0TUHMlaybKhNYtqJaiVt_ABo"
         }
       }
     },

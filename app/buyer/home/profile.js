@@ -2,12 +2,12 @@ import { View, Text } from "react-native";
 import React from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
-import Colors from "../../src/shared/Colors";
+import Colors from "../../../src/shared/Colors";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { Divider } from "react-native-paper";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { useNavigation } from "expo-router";
-import { useAuthContext } from "../../src/context/AuthContext";
+import { useAuthContext } from "../../../src/context/AuthContext";
 
 const profile = () => {
   const router = useNavigation();
@@ -18,16 +18,16 @@ const profile = () => {
       <SafeAreaView style={{ flexGrow: 1 }}>
         <View className="flex-1">
           <View className="flex-[2] bg-primary flex items-center justify-center">
-            <View className="w-28 h-28 bg-orange-100 rounded-full flex items-center justify-center">
+            <View className="w-28 h-28 bg-green-100 rounded-full flex items-center justify-center">
               <Text className="font-Poppins_600 text-3xl text-primary">
-                {userInfo?.first_name?.charAt(0)+''+userInfo?.last_name?.charAt(0)}
+                {userInfo?.name?.charAt(0)}
               </Text>
             </View>
             <View className="flex flex-col items-center mt-4">
-              <Text className="text-2xl font-Poppins_600 text-orange-100">
-              {userInfo?.first_name+' '+userInfo?.last_name}
+              <Text className="text-2xl font-Poppins_600 text-green-100">
+              {userInfo?.name}
               </Text>
-              <Text className="text-orange-100 font-Poppins_400">
+              <Text className="text-green-100 font-Poppins_400">
                 {userInfo?.email}
               </Text>
             </View>

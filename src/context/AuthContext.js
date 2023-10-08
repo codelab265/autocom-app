@@ -1,29 +1,26 @@
-import React, { createContext, useContext, useState, useEffect } from "react";
-
+import React, { createContext, useContext, useState, useEffect, useMemo, useCallback } from "react";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { ToastAndroid } from "react-native";
+import * as Location from "expo-location";
 import { BASE_URL } from "../config/API";
 import { useRouter } from "expo-router";
-import { ToastAndroid, Alert } from "react-native";
-import * as Location from "expo-location";
 
 export const AuthContext = createContext();
 
-const CheckAuth = (isLogged, authLoading, userInfo) => {
-  const router = useRouter();
-
+const CheckAuth = (isLogged, authLoading, userInfo, router) => {
   useEffect(() => {
     if (authLoading) {
       router.replace("SplashScreen");
     } else {
       if (isLogged) {
-        if(userInfo?.role==1 || userInfo?.role==2){
+        if (userInfo?.role == 1 || userInfo?.role == 2) {
           setImmediate(() => {
-            router.replace("fireguard");
+            router.replace("seller/home");
           });
-        }else{
+        } else {
           setImmediate(() => {
-            router.replace("home");
+            router.replace("buyer/home");
           });
         }
       } else {
@@ -33,8 +30,8 @@ const CheckAuth = (isLogged, authLoading, userInfo) => {
       }
     }
   }, [isLogged, authLoading]);
-};
 
+}
 export const AuthProvider = ({ children }) => {
   const [Loading, setLoading] = useState(false);
   const [userInfo, setUserInfo] = useState({});
@@ -42,14 +39,17 @@ export const AuthProvider = ({ children }) => {
   const [authLoading, setAuthLoading] = useState(true);
   const [location, setLocation] = useState(null);
   const [granted, setGranted] = useState(null);
-  const [uploadedImages, setUploadedImages] = useState([]);
-  const [reports, setReports] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [products, setProducts] = useState([]);
+  const [orders, setOrders] = useState([]);
+  
+  const router = useRouter();
 
   useEffect(() => {
     checkLogged();
   }, []);
 
-  CheckAuth(isLogged, authLoading, userInfo);
+  CheckAuth(isLogged, authLoading, userInfo, router);
 
   useEffect(() => {
     (async () => {
@@ -71,14 +71,29 @@ export const AuthProvider = ({ children }) => {
     })();
   }, [granted]);
 
-  const Register = (values) => {
+  useEffect(() => {
+    getCategories();
+  }, []);
+
+  const getCategories = useCallback(async () => {
+    try {
+      const response = await axios.get(`${BASE_URL}/categories`);
+      setCategories(response.data);
+    } catch (error) {
+      console.error(error);
+    }
+  }, []);
+
+  const sellerRegister = useCallback((values) => {
     setLoading(true);
     axios
-      .post(`${BASE_URL}/register`, values)
+      .post(`${BASE_URL}/seller/register`, values)
       .then((response) => {
         setLoading(false);
-        setUserInfo(response.data.data);
-        AsyncStorage.setItem("userInfo", JSON.stringify(response.data.data));
+        setUserInfo(response.data.user);
+        setCategories(response.data.categories);
+        setProducts(response.data.products);
+        AsyncStorage.setItem("userInfo", JSON.stringify(response.data.user));
         setIsLogged(true);
         console.log(response.data);
       })
@@ -86,19 +101,39 @@ export const AuthProvider = ({ children }) => {
         setLoading(false);
         console.error(error);
       });
-  };
+  }, []);
 
-  const Login = (values) => {
+  const buyerRegister = useCallback((values) => {
+    setLoading(true);
+    axios
+      .post(`${BASE_URL}/buyer/register`, values)
+      .then((response) => {
+        setLoading(false);
+        setUserInfo(response.data.user);
+        setCategories(response.data.categories);
+        setProducts(response.data.products);
+        AsyncStorage.setItem("userInfo", JSON.stringify(response.data.user));
+        setIsLogged(true);
+        console.log(response.data);
+      })
+      .catch((error) => {
+        setLoading(false);
+        console.error(error);
+      });
+  }, []);
+
+  const Login = useCallback((values) => {
     setLoading(true);
     axios
       .post(`${BASE_URL}/login`, values)
       .then((response) => {
         setLoading(false);
         if (response.data.status == "success") {
-          setUserInfo(response.data.data);
+          setUserInfo(response.data.user);
+          setCategories(response.data.categories);
+          setProducts(response.data.products);
           AsyncStorage.setItem("userInfo", JSON.stringify(response.data.data));
           setIsLogged(true);
-          console.log(response.data);
         } else {
           ToastAndroid.show("Invalid email or Password", ToastAndroid.LONG);
         }
@@ -107,9 +142,9 @@ export const AuthProvider = ({ children }) => {
         setLoading(false);
         console.error(error);
       });
-  };
+  }, []);
 
-  const updateProfile = (values) => {
+  const updateProfile = useCallback((values) => {
     setLoading(true);
     axios
       .post(`${BASE_URL}/user/update`, values)
@@ -124,16 +159,16 @@ export const AuthProvider = ({ children }) => {
         setLoading(false);
         console.error(error);
       });
-  };
+  }, []);
 
-  const Logout = async () => {
+  const Logout = useCallback(async () => {
     await AsyncStorage.removeItem("userInfo");
     setIsLogged(false);
     setUserInfo({});
     console.log("Logged out");
-  };
+  }, []);
 
-  const checkLogged = async () => {
+  const checkLogged = useCallback(async () => {
     let userInfo = await AsyncStorage.getItem("userInfo");
     userInfo = JSON.parse(userInfo);
     if (userInfo) {
@@ -141,26 +176,29 @@ export const AuthProvider = ({ children }) => {
       setIsLogged(true);
     }
     setAuthLoading(false);
-  };
+  }, []);
+
+  const authContextValue = useMemo(() => ({
+    sellerRegister,
+    buyerRegister,
+    Login,
+    Loading,
+    userInfo,
+    isLogged,
+    authLoading,
+    updateProfile,
+    categories,
+    products,
+    orders,
+    setOrders,
+    setProducts,
+    setCategories,
+    Logout,
+    location,
+  }), [sellerRegister, Login, Loading, userInfo, isLogged, authLoading, updateProfile, categories, products, orders,setOrders, setProducts, setCategories, Logout, location]);
 
   return (
-    <AuthContext.Provider
-      value={{
-        Register,
-        Loading,
-        userInfo,
-        isLogged,
-        authLoading,
-        Login,
-        updateProfile,
-        Logout,
-        uploadedImages,
-        setUploadedImages,
-        location,
-        reports,
-        setReports
-      }}
-    >
+    <AuthContext.Provider value={authContextValue}>
       {children}
     </AuthContext.Provider>
   );

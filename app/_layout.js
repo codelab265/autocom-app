@@ -60,8 +60,6 @@ export default () => {
               name="SplashScreen"
               options={{ headerShown: false }}
             />
-            <Stack.Screen name="home" options={{ headerShown: false }} />
-            <Stack.Screen name="fireguard" options={{ headerShown: false }} />
             <Stack.Screen
               name="AccountDetails"
               options={{ headerTitle: "Account Details" }}
@@ -71,33 +69,45 @@ export default () => {
               options={{ headerTitle: "Update Account" }}
             />
             <Stack.Screen
-              name="UploadImages"
-              options={{ headerTitle: "Upload Images" }}
+              name="buyer/(auth)/login"
+              options={{ headerTitle: "Buyer sign in" }}
             />
             <Stack.Screen
-              name="UploadedImages"
-              options={{ headerTitle: "Uploaded Images" }}
+              name="seller/(auth)/login"
+              options={{ headerTitle: "Seller sign in" }}
+            />
+
+            <Stack.Screen
+              name="buyer/(auth)/register"
+              options={{ headerTitle: "Buyer sign up" }}
             />
             <Stack.Screen
-              name="ReportDetails"
-              options={{ headerTitle: "Report Details" }}
+              name="seller/(auth)/register"
+              options={{ headerTitle: "Seller sign up" }}
             />
             <Stack.Screen
-              name="ViewLocation"
-              options={{ headerTitle: "Location" }}
+              name="seller/home"
+              options={{ headerShown:false}}
+            />
+            
+            
+            <Stack.Screen
+              name="seller/addproduct"
+              options={{ headerTitle:"Add Product" }}
             />
             <Stack.Screen
-              name="CheckWind"
-              options={{ headerTitle: "Wind details for the user" }}
+              name="buyer/home"
+              options={{ headerShown:false}}
             />
             <Stack.Screen
-              name="FireguardChat"
-              options={{ headerShown:false }}
+              name="buyer/productDetail"
+              options={{ headerShown:false}}
             />
             <Stack.Screen
-              name="UserChat"
-              options={{ headerShown:false }}
+              name="buyer/checkout"
+              options={{ headerTitle: "Delivery Information" }}
             />
+            
             
           </Stack>
         </PaperProvider>

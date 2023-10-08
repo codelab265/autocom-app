@@ -1,57 +1,44 @@
 import React from "react";
 import {
   KeyboardAvoidingView,
-  Image,
   Text,
   View,
   ScrollView,
-  Pressable,
 } from "react-native";
 
 import {
   Button,
-  Divider,
-  Menu,
-  RadioButton,
   TextInput,
 } from "react-native-paper";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { useRouter } from "expo-router";
 import * as Yup from "yup";
-import axios from "axios";
-import { useAuthContext } from "../src/context/AuthContext";
+import { useAuthContext } from "../../../src/context/AuthContext";
 import { useFormik } from "formik";
 
-const Register = () => {
-  const [gender, setGender] = React.useState(false);
-  const { Register, Loading } = useAuthContext();
+const register = () => {
+  const { buyerRegister, Loading } = useAuthContext();
   const router = useRouter();
 
   const validationSchema = Yup.object().shape({
-    firstName: Yup.string().required("Full Name is required"),
-    lastName: Yup.string().required("Full Name is required"),
+    name: Yup.string().required("Full Name is required"),
     email: Yup.string()
       .email("Invalid email address")
       .required("Email is required"),
     phoneNumber: Yup.string().required("Phone Number is required"),
-    gender: Yup.string().required("Gender is required"),
-    age: Yup.string().required("Age is required"),
     password: Yup.string().required("Password is required"),
   });
 
   const formik = useFormik({
     initialValues: {
-      firstName: "",
-      lastName: "",
+      name: "",
       email: "",
       phoneNumber: "",
-      age: "",
-      gender: "",
       password: "",
     },
     validationSchema,
     onSubmit: (values) => {
-      Register(values);
+      buyerRegister(values);
     },
   });
 
@@ -62,41 +49,23 @@ const Register = () => {
           <Text className="font-Poppins_500 text-lg mt-2">
             Fill in your info
           </Text>
+          
           <View className="w-full mt-4">
             <TextInput
-              label={"First Name"}
+              label={"Full Name"}
               mode="outlined"
               keyboardType="default"
               outlineColor="#ddd"
-              onChangeText={formik.handleChange("firstName")}
-              onBlur={formik.handleBlur("firstName")}
-              value={formik.values.firstName}
-              error={formik.touched.firstName && formik.errors.firstName}
+              onChangeText={formik.handleChange("name")}
+              onBlur={formik.handleBlur("name")}
+              value={formik.values.name}
+              error={formik.touched.name && formik.errors.name}
             />
-            {formik.touched.firstName && formik.errors.firstName && (
+            {formik.touched.name && formik.errors.name && (
               <Text
                 className="text-xs font-Poppins_400 text-red-500"
               >
-                {formik.errors.firstName}
-              </Text>
-            )}
-          </View>
-          <View className="w-full mt-4">
-            <TextInput
-              label={"Last Name"}
-              mode="outlined"
-              keyboardType="default"
-              outlineColor="#ddd"
-              onChangeText={formik.handleChange("lastName")}
-              onBlur={formik.handleBlur("lastName")}
-              value={formik.values.lastName}
-              error={formik.touched.lastName && formik.errors.lastName}
-            />
-            {formik.touched.lastName && formik.errors.lastName && (
-              <Text
-                className="text-xs font-Poppins_400 text-red-500"
-              >
-                {formik.errors.lastName}
+                {formik.errors.name}
               </Text>
             )}
           </View>
@@ -142,51 +111,6 @@ const Register = () => {
 
           <View className="w-full mt-4">
             <TextInput
-              label={"Age"}
-              mode="outlined"
-              keyboardType="phone-pad"
-              outlineColor="#ddd"
-              onChangeText={formik.handleChange("age")}
-              onBlur={formik.handleBlur("age")}
-              value={formik.values.age}
-              error={formik.touched.age && formik.errors.age}
-            />
-            {formik.touched.age && formik.errors.age && (
-              <Text
-                className="text-xs font-Poppins_400 text-red-500"
-              >
-                {formik.errors.age}
-              </Text>
-            )}
-          </View>
-
-          <View className="w-full mt-4 bg-white border border-[#ddd] rounded-md p-1 px-4">
-            <Text className="text-base font-Poppins_400">Gender</Text>
-            <RadioButton.Group
-              onValueChange={formik.handleChange("gender")}
-              value={formik.values.gender}
-            >
-              <View className="flex flex-row gap-x-4">
-                <View className="flex flex-row items-center">
-                  <Text className="text-small font-Poppins_400">Male</Text>
-                  <RadioButton value="Male" />
-                </View>
-                <View className="flex flex-row items-center">
-                  <Text className="text-small font-Poppins_400">Female</Text>
-                  <RadioButton value="Female" />
-                </View>
-              </View>
-            </RadioButton.Group>
-            {formik.touched.gender && formik.errors.gender && (
-              <Text
-                className="text-xs font-Poppins_400 text-red-500"
-              >
-                {formik.errors.gender}
-              </Text>
-            )}
-          </View>
-          <View className="w-full mt-4">
-            <TextInput
               label={"Password"}
               mode="outlined"
               secureTextEntry
@@ -208,20 +132,20 @@ const Register = () => {
 
           <View className="w-full mt-4">
             <Button
-              className="bg-orange-500 w-full py-[4px]"
+              className="bg-primary w-full py-[4px]"
               onPress={formik.handleSubmit}
               loading={Loading}
               disabled={Loading}
             >
-              <Text className="text-orange-100 font-Poppins_500 text-base">
+              <Text className="text-green-100 font-Poppins_500 text-base">
                 Sign up
               </Text>
             </Button>
           </View>
-          <View className="flex flex-row items-center justify-center gap-x-2 mt-10">
+          <View className="flex-1 flex-row items-end justify-center gap-x-2 mt-10">
             <Text className="font-Poppins_400 text-base">Have an account?</Text>
-            <TouchableOpacity onPress={() => router.push("/")}>
-              <Text className="font-Poppins_600 text-base text-secondary">
+            <TouchableOpacity onPress={() => router.push("buyer/login")}>
+              <Text className="font-Poppins_600 text-base text-primary">
                 Sign in
               </Text>
             </TouchableOpacity>
@@ -232,4 +156,4 @@ const Register = () => {
   );
 };
 
-export default Register;
+export default register;

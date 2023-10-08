@@ -1,7 +1,7 @@
 import { Tabs } from "expo-router";
 import { FontAwesome } from "@expo/vector-icons";
 import { Text, View } from "react-native";
-import Colors from "../../src/shared/Colors";
+import Colors from "../../../src/shared/Colors";
 
 export default function () {
   return (
@@ -19,33 +19,48 @@ export default function () {
         options={{
           tabBarIcon: ({ color, focused }) => (
             <View className="flex flex-col items-center justify-center">
-              <FontAwesome name="bar-chart-o" size={20} color={color} />
+              <FontAwesome name="home" size={20} color={color} />
               <Text
                 className={focused ? "font-Poppins_500" : "font-Poppins_400"}
                 style={{ color:color }}
               >
-                My reports
+                Home
               </Text>
             </View>
           ),
         }}
       />
-      <Tabs.Screen name="gallery"
+      {/* <Tabs.Screen name="products"
       options={{
         tabBarIcon: ({ color, focused }) => (
           <View className="flex flex-col items-center justify-center">
-            <FontAwesome name="image" size={20} color={color} />
+            <FontAwesome name="tag" size={20} color={color} />
             <Text
               className={focused ? "font-Poppins_500" : "font-Poppins_400"}
               style={{ color:color }}
             >
-              Gallery
+              Products
+            </Text>
+          </View>
+        ),
+      }}
+      /> */}
+      <Tabs.Screen name="orders"
+      options={{
+        tabBarIcon: ({ color, focused }) => (
+          <View className="flex flex-col items-center justify-center">
+            <FontAwesome name="list" size={20} color={color} />
+            <Text
+              className={focused ? "font-Poppins_500" : "font-Poppins_400"}
+              style={{ color:color }}
+            >
+              Orders
             </Text>
           </View>
         ),
       }}
       />
-      <Tabs.Screen name="chat"
+      <Tabs.Screen name="chatlist"
       options={{
         tabBarIcon: ({ color, focused }) => (
           <View className="flex flex-col items-center justify-center">
