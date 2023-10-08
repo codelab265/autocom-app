@@ -12,7 +12,9 @@
       "resizeMode": "contain",
       "backgroundColor": "#1b7979"
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true
     },
@@ -21,15 +23,21 @@
         "foregroundImage": "./src/assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.autocom.codelab",
-      "config": {
-        "googleMaps": {
-          "apiKey": "AIzaSyDoJl8RZOC0TUHMlaybKhNYtqJaiVt_ABo"
-        }
-      }
+      "package": "com.autocom.codelab"
     },
     "web": {
       "favicon": "./src/assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "0ad65b54-02e8-429f-bfce-8b2640861b39"
+      }
+    },
+    "runtimeVersion": {
+      "policy": "sdkVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/0ad65b54-02e8-429f-bfce-8b2640861b39"
     }
   }
 }
