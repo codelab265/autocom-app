@@ -4,10 +4,11 @@ import { Avatar, Divider } from "react-native-paper";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { useNavigation } from "expo-router";
 import moment from "moment";
-import Colors from "../shared/Colors";
+import Colors from "../../shared/Colors";
 
 const ChatItem = ({ item }) => {
   const router = useNavigation();
+  console.log(item);
   return (
     <TouchableOpacity
       onPress={() =>
@@ -35,7 +36,7 @@ const ChatItem = ({ item }) => {
             </View>
             <View>
               <Text className="text-xs font-Poppins_400">
-                {moment(item.last_message.updated_at).format("LT")}
+                {moment(item.last_message?.updated_at).format("LT")}
               </Text>
             </View>
           </View>
@@ -45,7 +46,7 @@ const ChatItem = ({ item }) => {
               ellipsizeMode="tail"
               className="font-Poppins_400 text-xs text-gray-600"
             >
-              {item.last_message.message}
+              {item.last_message?.message}
             </Text>
           </View>
         </View>

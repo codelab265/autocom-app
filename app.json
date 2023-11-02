@@ -15,6 +15,14 @@
     "assetBundlePatterns": [
       "**/*"
     ],
+    "plugins": [
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Allow $(PRODUCT_NAME) to access your camera."
+        }
+      ]
+    ],
     "ios": {
       "supportsTablet": true
     },
@@ -23,7 +31,12 @@
         "foregroundImage": "./src/assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.autocom.codelab"
+      "package": "com.autocom.codelab",
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyAQrBDvwyt-UZyeTQFmO52xVf5Iu23Qoqw"
+        }
+      }
     },
     "web": {
       "favicon": "./src/assets/favicon.png"

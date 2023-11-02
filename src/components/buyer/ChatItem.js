@@ -4,16 +4,17 @@ import { Avatar, Divider } from "react-native-paper";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { useNavigation } from "expo-router";
 import moment from "moment";
-import Colors from "../shared/Colors";
+import Colors from "../../shared/Colors";
 
 const ChatItem = ({ item }) => {
   const router = useNavigation();
+  console.log(item);
   return (
     <TouchableOpacity
       onPress={() =>
-        router.navigate("seller/chat", {
-          buyer_id: item.buyer_id,
-          name: item.buyer.name,
+        router.navigate("buyer/chat", {
+          seller_id: item.seller_id,
+          name: item.seller.name,
         })
       }
     >
@@ -21,7 +22,7 @@ const ChatItem = ({ item }) => {
         <View className="w-[15%]">
           <Avatar.Text
             size={50}
-            label={item.buyer.name.charAt(0)}
+            label={item.seller.name.charAt(0)}
             style={{ backgroundColor: Colors.primary }}
             labelStyle={{ color: "#fff", fontFamily: "Poppins_500Medium" }}
           />
@@ -30,12 +31,12 @@ const ChatItem = ({ item }) => {
           <View className="flex flex-row justify-between items-center">
             <View className="">
               <Text className="text-base font-Poppins_600">
-                {item.buyer.name}
+                {item.seller.name}
               </Text>
             </View>
             <View>
               <Text className="text-xs font-Poppins_400">
-                {moment(item.last_message.updated_at).format("LT")}
+                {moment(item.last_message?.updated_at).format("LT")}
               </Text>
             </View>
           </View>
@@ -45,7 +46,7 @@ const ChatItem = ({ item }) => {
               ellipsizeMode="tail"
               className="font-Poppins_400 text-xs text-gray-600"
             >
-              {item.last_message.message}
+              {item.last_message?.message}
             </Text>
           </View>
         </View>

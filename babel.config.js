@@ -7,7 +7,6 @@ module.exports = function (api) {
       "react-native-reanimated/plugin",
       "nativewind/babel",
       require.resolve("expo-router/babel"),
-      
     ],
   };
 };

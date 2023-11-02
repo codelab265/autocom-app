@@ -6,8 +6,8 @@ import Colors from "../../src/shared/Colors";
 
 const orderDetails = () => {
   const { order, role } = useLocalSearchParams();
-  const name = role == 2 ? order.seller.name : order.buyer.name;
-  const email = role == 2 ? order.seller.email : order.buyer.email;
+  const name = role == 3 ? order.seller.name : order.buyer.name;
+  const email = role == 3 ? order.seller.email : order.buyer.email;
   const phoneNumber =
     role == 2 ? order.seller?.phone_number : order.buyer?.phone_number;
 

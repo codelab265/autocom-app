@@ -14,7 +14,7 @@ const CheckAuth = (isLogged, authLoading, userInfo, router) => {
       router.replace("SplashScreen");
     } else {
       if (isLogged) {
-        if (userInfo?.role == 1 || userInfo?.role == 2) {
+        if (userInfo?.role == 2) {
           setImmediate(() => {
             router.replace("seller/home");
           });
@@ -129,7 +129,7 @@ export const AuthProvider = ({ children }) => {
       .then((response) => {
         setLoading(false);
         if (response.data.status == "success") {
-          setUserInfo(response.data.user);
+          setUserInfo(response.data.data);
           setCategories(response.data.categories);
           setProducts(response.data.products);
           AsyncStorage.setItem("userInfo", JSON.stringify(response.data.data));

@@ -38,7 +38,7 @@ export default () => {
   });
 
   if (!fontsLoaded) {
-    return <SplashScreen />;
+    return SplashScreen.hideAsync();
   }
 
   return (
@@ -85,30 +85,34 @@ export default () => {
               name="seller/(auth)/register"
               options={{ headerTitle: "Seller sign up" }}
             />
-            <Stack.Screen
-              name="seller/home"
-              options={{ headerShown:false}}
-            />
-            
-            
+            <Stack.Screen name="seller/home" options={{ headerShown: false }} />
+
             <Stack.Screen
               name="seller/addproduct"
-              options={{ headerTitle:"Add Product" }}
+              options={{ headerTitle: "Add Product" }}
             />
-            <Stack.Screen
-              name="buyer/home"
-              options={{ headerShown:false}}
-            />
+            <Stack.Screen name="buyer/home" options={{ headerShown: false }} />
             <Stack.Screen
               name="buyer/productDetail"
-              options={{ headerShown:false}}
+              options={{ headerShown: false }}
             />
             <Stack.Screen
               name="buyer/checkout"
               options={{ headerTitle: "Delivery Information" }}
             />
-            
-            
+            <Stack.Screen
+              name="orderDetails"
+              options={{ headerTitle: "Order Details" }}
+            />
+
+            <Stack.Screen
+              name="seller/chat"
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="buyer/chat"
+              options={{ headerShown: false }}
+            />
           </Stack>
         </PaperProvider>
       </AuthProvider>

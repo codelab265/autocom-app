@@ -7,7 +7,7 @@ import { BASE_URL } from "../../../src/config/API";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { ActivityIndicator, Badge, Divider } from "react-native-paper";
 
-import OrderItem from "../../../src/components/buyer/OrderItem";
+import OrderItem from "../../../src/components/OrderItem";
 import { useAuthContext } from "../../../src/context/AuthContext";
 import { FlatList } from "react-native-gesture-handler";
 import { ScrollView } from "react-native";
@@ -58,7 +58,7 @@ const orders = () => {
               </View>
             ) : !loading && orders.length > 0 ? (
               
-              orders.map((item) => <OrderItem order={item} key={item.id} role={3} />)
+              orders.map((item) => <OrderItem order={item} key={item.id} role={2} />)
             ) : (
               <View className="flex items-center justify-center">
                 <Text className="font-Poppins_400 text-base text-gray-500">
