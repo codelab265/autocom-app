@@ -3,7 +3,11 @@ import { useAuthContext } from "../../../src/context/AuthContext";
 import {
   ActivityIndicator,
   Avatar,
+  Button,
+  Divider,
   IconButton,
+  Modal,
+  Portal,
   Searchbar,
 } from "react-native-paper";
 import { FontAwesome } from "@expo/vector-icons";
@@ -16,9 +20,7 @@ import axios from "axios";
 import { BASE_URL, api } from "../../../src/config/API";
 import { useEffect } from "react";
 import * as ImagePicker from "expo-image-picker";
-
-import * as ImageManipulator from "expo-image-manipulator";
-import Constants from "expo-constants";
+import * as FileSystem from "expo-file-system";
 
 export default function Page() {
   const { Logout, userInfo, products, setProducts } = useAuthContext();
@@ -27,6 +29,17 @@ export default function Page() {
   const [image, setImage] = useState(null);
   const [selectedImage, setSelectedImage] = useState(null);
   const [predictions, setPredictions] = useState([]);
+  const [search, setSearch] = useState("");
+  const [visible, setVisible] = useState(false);
+
+  const showModal = () => setVisible(true);
+  const hideModal = () => setVisible(false);
+  const containerStyle = {
+    backgroundColor: "white",
+    padding: 20,
+    margin: 20,
+    borderRadius: 10,
+  };
 
   useEffect(() => {
     getProducts();
@@ -41,74 +54,39 @@ export default function Page() {
 
     if (!result.canceled) {
       setImage(result);
-      const imgManipulated = await ImageManipulator.manipulateAsync(
-        result.assets[0].uri,
-        [
-          {
-            resize: { width: 900 },
-          },
-        ],
-        {
-          compress: 1,
-          format: ImageManipulator.SaveFormat.JPEG,
-          base64: true,
-        }
-      );
-
-      setSelectedImage(imgManipulated.uri);
-      imageDetector(imgManipulated.base64);
+      imageDetector(result.assets[0].uri);
     }
   };
 
-  const imageDetector = async (imgBase64) => {
+  const imageDetector = async (imageUrl) => {
+    setIsLoading(true);
     try {
-      const USER_ID = "cvgixrkf0o6o";
-      const APP_ID = "autocom";
-      const MODEL_ID = "general-image-recognition";
-      const MODEL_VERSION_ID = "aa7f35c01e0642fda5cf400f543e7c40";
-      const IMAGE_URL = "https://samples.clarifai.com/metro-north.jpg";
-      const PAT = "c2a80f7507084bbdabaec8a51e6f79af";
-      const raw = JSON.stringify({
-        user_app_id: {
-          user_id: USER_ID,
-          app_id: APP_ID,
-        },
-        inputs: [
-          {
-            data: {
-              image: {
-                url: imgBase64,
-              },
-            },
-          },
-        ],
+      const apiKey = "AIzaSyAQrBDvwyt-UZyeTQFmO52xVf5Iu23Qoqw";
+      const apiUrl = `https://vision.googleapis.com/v1/images:annotate?key=${apiKey}`;
+
+      const base64Image = await FileSystem.readAsStringAsync(imageUrl, {
+        encoding: FileSystem.EncodingType.Base64,
       });
 
-      const requestOptions = {
-        headers: {
-          Authorization: "Key c2a80f7507084bbdabaec8a51e6f79af",
-        },
-        body: raw,
+      const requestData = {
+        requests: [
+          {
+            image: {
+              content: base64Image,
+            },
+            features: [{ type: "LABEL_DETECTION", maxResults: 3 }],
+          },
+        ],
       };
 
-      const response = await axios.post(
-        "https://api.clarifai.com/v2/models/general-image-recognition/versions/aa7f35c01e0642fda5cf400f543e7c40/outputs",
-        requestOptions
-      );
-
-      console.log(response.data.data);
+      const apiResponse = await axios.post(apiUrl, requestData);
+      console.log(apiResponse.data.responses[0].labelAnnotations);
+      setPredictions(apiResponse.data.responses[0].labelAnnotations);
+      showModal();
+      setIsLoading(false);
     } catch (error) {
-      if (error.response) {
-        console.error(
-          "Server error:",
-          error.response.status,
-          error.response.data
-        );
-      } else if (error.request) {
-        console.error("No response received:", error.request);
-      } else {
-        console.error("Error:", error.message);
-      }
+      console.error(error);
+      setIsLoading(false);
     }
   };
 
@@ -123,6 +101,18 @@ export default function Page() {
       .catch((error) => {
         console.log(error);
       });
+  };
+
+  const filteredProducts = () => {
+    if (search.length < 1) {
+      return products;
+    } else {
+      return products.filter(
+        (item) =>
+          item.product_name.toLowerCase().includes(search.toLowerCase()) ||
+          item.category.name.toLowerCase().includes(search.toLowerCase())
+      );
+    }
   };
   return (
     <SafeAreaView className="flex-1">
@@ -150,16 +140,24 @@ export default function Page() {
               placeholder="Search"
               inputStyle={{ fontFamily: "Poppins_400Regular" }}
               className="bg-white border border-gray-200"
+              value={search}
+              onChangeText={(e) => setSearch(e)}
             />
           </View>
           <View>
-            <IconButton
-              icon={"image-search"}
-              iconColor="#fff"
-              className="bg-primary"
-              size={30}
-              onPress={pickImage}
-            />
+            {isLoading ? (
+              <View className="flex items-center justify-center">
+                <ActivityIndicator size={"small"} />
+              </View>
+            ) : (
+              <IconButton
+                icon={"image-search"}
+                iconColor="#fff"
+                className="bg-primary"
+                size={30}
+                onPress={pickImage}
+              />
+            )}
           </View>
         </View>
         <View className="flex-1 mt-4">
@@ -175,7 +173,7 @@ export default function Page() {
               </View>
             ) : products?.length > 0 ? (
               <FlatList
-                data={products}
+                data={filteredProducts()}
                 renderItem={({ item }) => <ProductItem product={item} />}
                 keyExtractor={(item) => item.id}
                 showsVerticalScrollIndicator={false}
@@ -190,6 +188,32 @@ export default function Page() {
           </View>
         </View>
       </View>
+      <Portal>
+        <Modal
+          visible={visible}
+          onDismiss={hideModal}
+          contentContainerStyle={containerStyle}
+        >
+          <Text className="font-Poppins_600 text-lg">RESULTS</Text>
+          <Divider />
+          <View className="mt-2">
+            {predictions.map((predict) => (
+              <View
+                className="flex flex-row items-center justify-between bg-gray-100 p-2 mb-1 rounded-sm"
+                key={predict.score}
+              >
+                <Text className="font-Poppins_400">{predict.description}</Text>
+                <Button
+                  mode="contained"
+                  onPress={() => setSearch(predict.description)}
+                >
+                  <Text className="font-Poppins_500">Use</Text>
+                </Button>
+              </View>
+            ))}
+          </View>
+        </Modal>
+      </Portal>
     </SafeAreaView>
   );
 }

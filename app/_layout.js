@@ -97,6 +97,10 @@ export default () => {
               options={{ headerShown: false }}
             />
             <Stack.Screen
+              name="buyer/sellerLocation"
+              options={{ headerTitle: "Seller Location" }}
+            />
+            <Stack.Screen
               name="buyer/checkout"
               options={{ headerTitle: "Delivery Information" }}
             />

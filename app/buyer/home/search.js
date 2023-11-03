@@ -1,7 +1,7 @@
 import { View, Text } from "react-native";
 import React from "react";
 import MapViewDirections from "react-native-maps-directions";
-import MapView from "react-native-maps";
+import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
 
 const search = () => {
   const origin = { latitude: 37.3318456, longitude: -122.0296002 };
@@ -18,7 +18,7 @@ const search = () => {
           longitudeDelta: 0.0421,
         }}
         className="w-full h-full"
-        provider="google"
+        provider={PROVIDER_GOOGLE}
       >
         
         <MapViewDirections
@@ -28,6 +28,7 @@ const search = () => {
           strokeWidth={3}
           strokeColor="hotpink"
         />
+        <Marker coordinate={origin}  />
       </MapView>
     </View>
   );

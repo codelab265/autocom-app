@@ -20,8 +20,22 @@ const productDetail = () => {
       <Appbar.Header className="font-Poppins_500">
         <Appbar.BackAction onPress={() => router.goBack()} />
         <Appbar.Content title={product.product_name} />
-        <Appbar.Action icon="account-details" onPress={() => {}} />
-        <Appbar.Action icon="message" onPress={() => {}} />
+        <Appbar.Action
+          icon="store-marker"
+          onPress={() =>
+            router.navigate("buyer/sellerLocation", {product
+            })
+          }
+        />
+        <Appbar.Action
+          icon="message"
+          onPress={() =>
+            router.navigate("buyer/chat", {
+              seller_id: product.seller_id,
+              name: product.seller.name,
+            })
+          }
+        />
       </Appbar.Header>
       <View className="flex-1 bg-white">
         <View className="flex-[4] bg-white p-4 rounded-3xl">
@@ -58,7 +72,10 @@ const productDetail = () => {
           </View>
         </View>
         <View className="flex-[1] bg-primary flex items-center justify-center px-4">
-          <Button className="bg-green-100 w-full" onPress={()=>router.navigate('buyer/checkout', {product})}>
+          <Button
+            className="bg-green-100 w-full"
+            onPress={() => router.navigate("buyer/checkout", { product })}
+          >
             <Text className="font-Poppins_600 text-base text-primary">Buy</Text>
           </Button>
         </View>
