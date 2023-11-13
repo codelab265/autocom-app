@@ -80,8 +80,11 @@ export default function Page() {
       };
 
       const apiResponse = await axios.post(apiUrl, requestData);
-      console.log(apiResponse.data.responses[0].labelAnnotations);
-      setPredictions(apiResponse.data.responses[0].labelAnnotations);
+      const predicts = apiResponse.data.responses[0].labelAnnotations;
+      const filteredData = predicts.filter(
+        (item) => !item.description.toLowerCase().includes("sky")
+      );
+      setPredictions(filteredData);
       showModal();
       setIsLoading(false);
     } catch (error) {
