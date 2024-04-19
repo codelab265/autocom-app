@@ -6,7 +6,7 @@ import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
 const search = () => {
   const origin = { latitude: 37.3318456, longitude: -122.0296002 };
   const destination = { latitude: 37.771707, longitude: -122.4053769 };
-  const GOOGLE_MAPS_APIKEY = "AIzaSyAQrBDvwyt-UZyeTQFmO52xVf5Iu23Qoqw";
+  const GOOGLE_MAPS_APIKEY = "AIzaSyCNfTV36PL_3yIFMxzewyPXvTSqZdldW5k";
 
   return (
     <View className="flex-1">
