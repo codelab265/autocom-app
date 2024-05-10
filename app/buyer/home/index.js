@@ -23,6 +23,7 @@ import * as ImagePicker from "expo-image-picker";
 import * as FileSystem from "expo-file-system";
 import Slider from "@react-native-community/slider";
 import * as Location from "expo-location";
+import PredictedItem from "../../../src/components/buyer/PredictedItem";
 
 export default function Page() {
   const { Logout, userInfo, products, setProducts } = useAuthContext();
@@ -51,7 +52,6 @@ export default function Page() {
 
         const loc = await Location.getCurrentPositionAsync({});
         setLocation(loc);
-        console.log(loc.coords);
       } catch (error) {
         console.log("Error when trying to get location:", error);
       }
@@ -70,11 +70,7 @@ export default function Page() {
   }, []);
 
   const pickImage = async () => {
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      aspect: [4, 3],
-    });
+    let result = await ImagePicker.launchCameraAsync();
 
     if (!result.canceled) {
       setImage(result);
@@ -108,6 +104,7 @@ export default function Page() {
       const filteredData = predicts.filter(
         (item) => !item.description.toLowerCase().includes("sky")
       );
+      console.log(filteredData);
       setPredictions(filteredData);
       showModal();
       setIsLoading(false);
@@ -124,6 +121,7 @@ export default function Page() {
       .then((response) => {
         setLoading(false);
         setProducts(response.data);
+        console.log(response.data);
       })
       .catch((error) => {
         console.log(error);
@@ -187,17 +185,17 @@ export default function Page() {
     return deg * (Math.PI / 180);
   };
 
-  /* const filteredProducts = () => {
-    if (search.length < 1) {
-      return products;
-    } else {
-      return products.filter(
-        (item) =>
-          item.product_name.toLowerCase().includes(search.toLowerCase()) ||
-          item.category.name.toLowerCase().includes(search.toLowerCase())
-      );
-    }
-  }; */
+  const PredictedProducts = products.filter((product) =>
+    predictions.some(
+      (predict) =>
+        product.product_name
+          .toLowerCase()
+          .includes(predict.description.toLowerCase()) ||
+        product.category.name
+          .toLowerCase()
+          .includes(predict.description.toLowerCase())
+    )
+  );
   return (
     <SafeAreaView className="flex-1">
       <View className="flex-1 p-4">
@@ -300,23 +298,18 @@ export default function Page() {
                 <Text>{sliderValue} KM</Text>
               </View>
             </View>
-            {predictions.map((predict) => (
-              <View
-                className="flex flex-row items-center justify-between bg-gray-100 p-2 mb-1 rounded-sm"
-                key={predict.score}
-              >
-                <Text className="font-Poppins_400">{predict.description}</Text>
-                <Button
-                  mode="contained"
-                  onPress={async () => {
-                    setFromRadius(true);
-                    setSearch(predict.description);
-                  }}
-                >
-                  <Text className="font-Poppins_500">Use</Text>
-                </Button>
+            {PredictedProducts.length > 0 &&
+              PredictedProducts.map((predict) => (
+                <PredictedItem product={predict} key={predict.id} />
+              ))}
+
+            {PredictedProducts.length === 0 && (
+              <View className="p-2">
+                <Text className="font-Poppins_400 text-base text-gray-500">
+                  No products found
+                </Text>
               </View>
-            ))}
+            )}
           </View>
         </Modal>
       </Portal>

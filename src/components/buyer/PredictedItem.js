@@ -1,16 +1,14 @@
-import { View, Text, Image } from "react-native";
 import React from "react";
+import { View, Text, Image } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
-import { Avatar } from "react-native-paper";
 import { BASE_URL2 } from "../../config/API";
 import util from "../../shared/util";
 import { useNavigation } from "expo-router";
 import { FontAwesome } from "@expo/vector-icons";
 import Colors from "../../shared/Colors";
 
-const ProductItem = ({ product }) => {
+const PredictedItem = ({ product }) => {
   const router = useNavigation();
-
   return (
     <TouchableOpacity
       className="flex flex-row items-center h-[120px] w-full bg-white rounded-lg border border-gray-200 p-2 mb-1"
@@ -61,4 +59,4 @@ const ProductItem = ({ product }) => {
   );
 };
 
-export default ProductItem;
+export default PredictedItem;

@@ -30,7 +30,7 @@ const ViewLocation = () => {
       longitude: parseFloat(longitude),
     },
   ]);
-  const GOOGLE_MAPS_APIKEY = "AIzaSyCG9E5E7_YCna0L7GCr8BJgGjLlxkkJE-8";
+  const GOOGLE_MAPS_APIKEY = "AIzaSyCNfTV36PL_3yIFMxzewyPXvTSqZdldW5k";
 
   return (
     <View className="flex-1 relative">
