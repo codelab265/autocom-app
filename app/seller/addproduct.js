@@ -44,6 +44,8 @@ const addproduct = () => {
       price: "",
       quantity: "",
       imageUrl: "",
+      brand: "",
+      model: "",
     },
     validationSchema,
     onSubmit: (values, { resetForm }) => {
@@ -60,6 +62,8 @@ const addproduct = () => {
     formData.append("product_description", values.description);
     formData.append("quantity", values.quantity);
     formData.append("price", values.price);
+    formData.append("brand", values.brand);
+    formData.append("model", values.model);
     if (values.imageUrl) {
       const uri =
         Platform.OS === "android"
@@ -168,6 +172,32 @@ const addproduct = () => {
               onBlur={formik.handleBlur("description")}
               value={formik.values.description}
               error={formik.touched.description && formik.errors.description}
+            />
+          </View>
+
+          <View className="mb-2">
+            <TextInput
+              mode="outlined"
+              label={"Model"}
+              outlineColor="#ddd"
+              multiline={true}
+              onChangeText={formik.handleChange("model")}
+              onBlur={formik.handleBlur("model")}
+              value={formik.values.model}
+              error={formik.touched.model && formik.errors.model}
+            />
+          </View>
+
+          <View className="mb-2">
+            <TextInput
+              mode="outlined"
+              label={"Brand"}
+              outlineColor="#ddd"
+              multiline={true}
+              onChangeText={formik.handleChange("brand")}
+              onBlur={formik.handleBlur("brand")}
+              value={formik.values.brand}
+              error={formik.touched.brand && formik.errors.brand}
             />
           </View>
 

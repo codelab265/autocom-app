@@ -133,7 +133,7 @@ export default function Page() {
     const currentLat = location?.coords.latitude;
     const currentLon = location?.coords.longitude;
 
-    let filtered = products.filter(
+    let filtered = products?.filter(
       (item) =>
         item.product_name.toLowerCase().includes(search.toLowerCase()) ||
         item.category.name.toLowerCase().includes(search.toLowerCase())
@@ -141,7 +141,7 @@ export default function Page() {
 
     // Filter by radius
     if (fromRadius) {
-      filtered = filtered.filter((item) => {
+      filtered = filtered?.filter((item) => {
         if (
           currentLat &&
           currentLon &&

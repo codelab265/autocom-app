@@ -173,7 +173,9 @@ const productDetail = () => {
       <View className="absolute w-full flex flex-row gap-x-2 px-4 bottom-0 left-0 right-0">
         <Button
           className="bg-secondary flex-grow"
-          onPress={() => router.navigate("buyer/checkout", { ProductDetails })}
+          onPress={() =>
+            router.navigate("buyer/checkout", { product: ProductDetails })
+          }
         >
           <Text className="font-Poppins_600 text-base text-black">Buy</Text>
         </Button>
