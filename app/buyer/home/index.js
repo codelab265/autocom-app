@@ -101,11 +101,29 @@ export default function Page() {
 
       const apiResponse = await axios.post(apiUrl, requestData);
       const predicts = apiResponse.data.responses[0].labelAnnotations;
-      const filteredData = predicts.filter(
+      const filteredData = predicts?.filter(
         (item) => !item.description.toLowerCase().includes("sky")
       );
-      console.log(filteredData);
-      setPredictions(filteredData);
+
+      const modifiedData = filteredData.map((item) => {
+        if (item.description.includes("lighting")) {
+          return {
+            ...item,
+            description: "light",
+          };
+        }
+
+        if (item.description.includes("rim")) {
+          return {
+            ...item,
+            description: "hubcab",
+          };
+        }
+
+        return item;
+      });
+      console.log(modifiedData);
+      setPredictions(modifiedData);
       showModal();
       setIsLoading(false);
     } catch (error) {
@@ -136,7 +154,8 @@ export default function Page() {
     let filtered = products?.filter(
       (item) =>
         item.product_name.toLowerCase().includes(search.toLowerCase()) ||
-        item.category.name.toLowerCase().includes(search.toLowerCase())
+        item.category.name.toLowerCase().includes(search.toLowerCase()) ||
+        item.product_description.toLowerCase().includes(search.toLowerCase())
     );
 
     // Filter by radius
@@ -298,6 +317,7 @@ export default function Page() {
                 <Text>{sliderValue} KM</Text>
               </View>
             </View>
+
             {PredictedProducts.length > 0 &&
               PredictedProducts.map((predict) => (
                 <PredictedItem product={predict} key={predict.id} />
